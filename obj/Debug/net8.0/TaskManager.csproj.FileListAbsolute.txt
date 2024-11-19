@@ -274,3 +274,4 @@ C:\Users\DELL\TaskManager\bin\Debug\net8.0\ru\Microsoft.CodeAnalysis.Scripting.r
 C:\Users\DELL\TaskManager\bin\Debug\net8.0\tr\Microsoft.CodeAnalysis.Scripting.resources.dll
 C:\Users\DELL\TaskManager\bin\Debug\net8.0\zh-Hans\Microsoft.CodeAnalysis.Scripting.resources.dll
 C:\Users\DELL\TaskManager\bin\Debug\net8.0\zh-Hant\Microsoft.CodeAnalysis.Scripting.resources.dll
+C:\Users\DELL\TaskManager\bin\Debug\net8.0\libman.json
