@@ -1,31 +1,25 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TaskManager.Data;
 using TaskManager.Models;
 
 namespace TaskManager.Controllers
 {
-    public class TareasController : Controller
+    public class TasksController(ApplicationDbContext context) : Controller
     {
-        private readonly ApplicationDbContext _context;
+        private readonly ApplicationDbContext DBContext = context;
 
-        public TareasController(ApplicationDbContext context)
-        {
-            _context = context;
-        }
-
-        // GET: Tareas
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Tareas.ToListAsync());
+            TasksViewModel model = new()
+            {
+                Tasks = await DBContext.Tasks.ToListAsync(),
+                TaskSelected = new(),
+                NewTask = new()
+            };
+            return View(model);
         }
 
-        // GET: Tareas/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -33,7 +27,7 @@ namespace TaskManager.Controllers
                 return NotFound();
             }
 
-            var tarea = await _context.Tareas
+            var tarea = await DBContext.Tasks
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (tarea == null)
             {
@@ -43,29 +37,24 @@ namespace TaskManager.Controllers
             return View(tarea);
         }
 
-        // GET: Tareas/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Tareas/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Titulo,Descripcion,FechaCreacion,FechaVencimiento,Estado,Prioridad")] Tarea tarea)
+        public async Task<IActionResult> Create([Bind("Id,Titulo,Descripcion,FechaCreacion,FechaVencimiento,Estado,Prioridad")] Data.Entities.Task tarea)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(tarea);
-                await _context.SaveChangesAsync();
+                DBContext.Add(tarea);
+                await DBContext.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(tarea);
         }
 
-        // GET: Tareas/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -73,7 +62,7 @@ namespace TaskManager.Controllers
                 return NotFound();
             }
 
-            var tarea = await _context.Tareas.FindAsync(id);
+            var tarea = await DBContext.Tasks.FindAsync(id);
             if (tarea == null)
             {
                 return NotFound();
@@ -81,12 +70,9 @@ namespace TaskManager.Controllers
             return View(tarea);
         }
 
-        // POST: Tareas/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Titulo,Descripcion,FechaCreacion,FechaVencimiento,Estado,Prioridad")] Tarea tarea)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Titulo,Descripcion,FechaCreacion,FechaVencimiento,Estado,Prioridad")] Data.Entities.Task tarea)
         {
             if (id != tarea.Id)
             {
@@ -97,8 +83,8 @@ namespace TaskManager.Controllers
             {
                 try
                 {
-                    _context.Update(tarea);
-                    await _context.SaveChangesAsync();
+                    DBContext.Update(tarea);
+                    await DBContext.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -116,7 +102,6 @@ namespace TaskManager.Controllers
             return View(tarea);
         }
 
-        // GET: Tareas/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -124,7 +109,7 @@ namespace TaskManager.Controllers
                 return NotFound();
             }
 
-            var tarea = await _context.Tareas
+            var tarea = await DBContext.Tasks
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (tarea == null)
             {
@@ -134,24 +119,23 @@ namespace TaskManager.Controllers
             return View(tarea);
         }
 
-        // POST: Tareas/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var tarea = await _context.Tareas.FindAsync(id);
+            var tarea = await DBContext.Tasks.FindAsync(id);
             if (tarea != null)
             {
-                _context.Tareas.Remove(tarea);
+                DBContext.Tasks.Remove(tarea);
             }
 
-            await _context.SaveChangesAsync();
+            await DBContext.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool TareaExists(int id)
         {
-            return _context.Tareas.Any(e => e.Id == id);
+            return DBContext.Tasks.Any(e => e.Id == id);
         }
     }
 }

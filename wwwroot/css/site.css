@@ -1,32 +1,29 @@
-body {
-  background-color: #f8f9fa; /* Fondo claro */
-  color: #212529; /* Texto negro */
+input, button{
+    box-shadow:none!important;
 }
 
-.navbar {
-  background-color: #ffffff; /* Fondo blanco */
-  border-bottom: 1px solid #e0e0e0;
+.header{
+    margin: 3rem 0 1rem 0;
 }
 
-.btn-primary {
-  background-color: #4a90e2; /* Azul elegante */
-  border-color: #4a90e2;
-}
+     .buttons-container {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        padding: 0;
+    }
 
-.btn-danger {
-  background-color: #e94e77; /* Rojo suave */
-  border-color: #e94e77;
-}
+     .buttons-container div{
+         margin: 0 0 0 1rem;
+     }
 
-.btn-success {
-  background-color: #50c878; /* Verde fresco */
-  border-color: #50c878;
-}
-
-.table-striped tbody tr:nth-of-type(odd) {
-  background-color: #ffffff;
-}
-
-.table-striped tbody tr:nth-of-type(even) {
-  background-color: #f1f1f1;
+.btn {
+    height: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+    width: auto;
+    min-width: 70px;
+    border-radius: 25px;
+    padding: .2rem .5rem;
 }

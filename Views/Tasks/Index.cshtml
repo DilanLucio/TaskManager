@@ -1,0 +1,102 @@
+@model TasksViewModel
+
+<div class="container-lg">
+    <div class="row row-cols-2 header">
+        <h2><i class="bi bi-check2-circle"></i> To Do</h2>
+        <div class="buttons-container">
+            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#create"><i class="bi bi-file-earmark-plus"></i> Add</button>
+            <div class="form-check form-switch form-check-reverse">
+                <input class="form-check-input" type="checkbox" role="switch" checked id="darkmode">
+                <label class="form-check-label" for="darkmode"><i class="bi bi-moon-stars-fill"></i></label>
+            </div>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped table-hover">
+            <caption>List of tasks</caption>
+            <thead class="align-middle">
+                <tr>
+                    <th scope="col">Title</th>
+                    <th scope="col">Description</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Priority</th>
+                    <th scope="col">End date</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="table-group-divider">
+                @foreach (var tarea in Model.Tasks)
+                {
+                    <tr>
+                        <td>@tarea.Title</td>
+                        <td>@tarea.Description</td>
+                        <td>@tarea.Status</td>
+                        <td>@tarea.Priority</td>
+                        <td>@tarea.EndDate</td>
+                        <td>
+                            <a class="btn btn-sm btn-primary" asp-action="Edit" asp-route-id="@tarea.Id">Editar</a>
+                            <a class="btn btn-sm btn-danger" asp-action="Delete" asp-route-id="@tarea.Id">Eliminar</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="modal fade" id="create" tabindex="-1" aria-labelledby="createLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form asp-action="Create">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="createLabel"><i class="bi bi-file-earmark-plus"></i> New task</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group">
+                        <label asp-for="NewTask.Title" class="control-label"></label>
+                        <input asp-for="NewTask.Title" class="form-control" />
+                        <span asp-validation-for="NewTask.Title" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="NewTask.Description" class="control-label"></label>
+                        <input asp-for="NewTask.Description" class="form-control" />
+                        <span asp-validation-for="NewTask.Description" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="NewTask.StartDate" class="control-label"></label>
+                        <input asp-for="NewTask.StartDate" class="form-control" />
+                        <span asp-validation-for="NewTask.StartDate" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="NewTask.EndDate" class="control-label"></label>
+                        <input asp-for="NewTask.EndDate" class="form-control" />
+                        <span asp-validation-for="NewTask.EndDate" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="NewTask.Status" class="control-label"></label>
+                        <input asp-for="NewTask.Status" class="form-control" />
+                        <span asp-validation-for="NewTask.Status" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="NewTask.Priority" class="control-label"></label>
+                        <input asp-for="NewTask.Priority" class="form-control" />
+                        <span asp-validation-for="NewTask.Priority" class="text-danger"></span>
+                    </div>
+
+                    @section Scripts {
+                        @{
+                            await Html.RenderPartialAsync("_ValidationScriptsPartial");
+                        }
+                    }
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-primary" value="Create">Add task</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

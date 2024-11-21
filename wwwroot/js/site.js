@@ -1,4 +1,7 @@
-﻿// Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
+﻿const darkModeToggle = document.getElementById('darkmode');
 
-// Write your JavaScript code.
+darkModeToggle.addEventListener('change', () => {
+    const htmlElement = document.documentElement;
+    const newTheme = darkModeToggle.checked ? 'dark' : 'light'; 
+    htmlElement.setAttribute('data-bs-theme', newTheme);
+});
