@@ -18,3 +18,8 @@ This update includes improvements to the project's interface and architecture, a
    <img alt="CSS3" src="https://img.shields.io/badge/CSS3-1572B6?style=for-the-badge&logo=css3&logoColor=white"> 
    <img alt="Bootstrap" src="https://img.shields.io/badge/Bootstrap-563D7C?style=for-the-badge&logo=bootstrap&logoColor=white"> 
  </div>
+
+#### Examples
+![Screenshot 2024-11-24 151910](https://github.com/user-attachments/assets/3239e4d5-6204-4b1a-ad8c-1ec052abf88d)
+![Screenshot 2024-11-24 151920](https://github.com/user-attachments/assets/58ab1b81-c2f8-4908-aa65-c7578027ec4b)
+
