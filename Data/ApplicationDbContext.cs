@@ -1,13 +1,17 @@
 using Microsoft.EntityFrameworkCore;
-using TaskManager.Models;
+using System.Reflection;
+using Task = TaskManager.Data.Entities.Task;
 
 namespace TaskManager.Data
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : DbContext(options)
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-            : base(options) { }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+        }
 
-        public DbSet<Tarea> Tareas { get; set; } = null!;
+        public DbSet<Task> Tasks { get; set; } = null!;
     }
 }
