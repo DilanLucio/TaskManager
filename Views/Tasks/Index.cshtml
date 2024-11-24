@@ -1,102 +1,372 @@
 @model TasksViewModel
 
-<div class="container-lg">
+<div class="form-check form-switch form-check-reverse dark-mode-container">
+    <input class="form-check-input" type="checkbox" role="switch" id="darkmode">
+    <label class="form-check-label" for="darkmode"><i class="bi bi-moon-stars-fill"></i></label>
+</div>
+
+<div class="tasks-container">
     <div class="row row-cols-2 header">
         <h2><i class="bi bi-check2-circle"></i> To Do</h2>
         <div class="buttons-container">
-            <button type="button" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#create"><i class="bi bi-file-earmark-plus"></i> Add</button>
-            <div class="form-check form-switch form-check-reverse">
-                <input class="form-check-input" type="checkbox" role="switch" checked id="darkmode">
-                <label class="form-check-label" for="darkmode"><i class="bi bi-moon-stars-fill"></i></label>
+            <button type="button" class="btn btn-outline-purple" data-bs-toggle="modal" data-bs-target="#create" onclick="CleanForm()"><i class="bi bi-file-earmark-plus"></i> Add</button>
+        </div>
+    </div>
+    <hr />
+    <div>
+        <div class="mb-3">
+            @{
+                double totalTasks = Model.Tasks.Count();
+                double completedTasks = Model.TasksCompleted.Count();
+                double percentage = totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0;
+            }
+            <p id="task-completed">Tasks completed @completedTasks/@totalTasks</p>
+
+            <div class="progress" role="progressbar" aria-label="Animated striped bar" aria-valuenow="@percentage" aria-valuemin="0" aria-valuemax="100">
+                <div class="progress-bar progress-bar-striped progress-bar-animated purple-background" style="width: @percentage%"></div>
+            </div>
+        </div>
+        <div class="task-list">
+            @foreach (var task in Model.Tasks.OrderByDescending(t => t.Priority).ThenBy(t => t.EndDate))
+            {
+                if (task.Status != (int)TaskManager.Data.Enums.TaskStatus.Completed)
+                {
+                    <div class="task">
+                        <div>
+                            @if (task.Priority == (int)TaskManager.Data.Enums.TaskPriorities.High)
+                            {
+                                <b class="task-title"><i class="bi bi-star-fill"></i> @task.Title</b>
+                            }
+                            else if (task.Priority == (int)TaskManager.Data.Enums.TaskPriorities.Medium)
+                            {
+                                <b class="task-title"><i class="bi bi-star-half"></i> @task.Title</b>
+                            }
+                            else
+                            {
+                                <b class="task-title"><i class="bi bi-star"></i> @task.Title</b>
+                            }
+
+                            <div>
+                                @if (task.EndDate < DateTime.Now)
+                                {
+                                    <span class="@(task.EndDate < DateTime.Now ? "task-due":"")" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Task due">@task.EndDate.ToShortDateString() <i class="bi bi-calendar-x-fill"></i></span>
+                                }
+                                else
+                                {
+                                    <span>@task.EndDate.ToShortDateString()</span>
+                                }
+                            </div>
+                        </div>
+                        <div><p class="task-description">@task.Description</p></div>
+                        <div class="task-footer">
+                            <span class="button-edit-task" data-bs-toggle="modal" data-bs-target="#edit" onclick="SelectTask(@task.Id)"><i data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Edit task" class="bi bi-pencil-fill"></i></span>
+                            <span class="button-delete-task" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Delete task" onclick="DeleteTask(@task.Id)"><i class="bi bi-trash-fill"></i></span>
+                            <span class="button-done-task" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Complete task" onclick="CompleteTask(@task.Id)"><i class="bi bi-check-circle-fill"></i></span>
+                        </div>
+                    </div>
+                }
+            }
+            <div>
+                @foreach (var task in Model.TasksCompleted)
+                {
+                    <div class="task task-completed">
+                        <div>
+                            @if (task.Priority == (int)TaskManager.Data.Enums.TaskPriorities.High)
+                            {
+                                <b class="task-title"><i class="bi bi-star-fill"></i> @task.Title</b>
+                            }
+                            else if (task.Priority == (int)TaskManager.Data.Enums.TaskPriorities.Medium)
+                            {
+                                <b class="task-title"><i class="bi bi-star-half"></i> @task.Title</b>
+                            }
+                            else
+                            {
+                                <b class="task-title"><i class="bi bi-star"></i> @task.Title</b>
+                            }
+                            <div>
+                                <span>@task.EndDate.ToShortDateString()</span>
+                                <span class="button-edit-task" data-bs-toggle="modal" data-bs-target="#edit" onclick="SelectTask(@task.Id)"><i data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Edit task"  class="bi bi-pencil-fill"></i></span>
+                                <span class="button-delete-task" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Delete task" onclick="DeleteTask(@task.Id)"><i class="bi bi-trash-fill"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                }
             </div>
         </div>
     </div>
-
-    <div class="table-responsive">
-        <table class="table table-bordered table-striped table-hover">
-            <caption>List of tasks</caption>
-            <thead class="align-middle">
-                <tr>
-                    <th scope="col">Title</th>
-                    <th scope="col">Description</th>
-                    <th scope="col">Status</th>
-                    <th scope="col">Priority</th>
-                    <th scope="col">End date</th>
-                    <th scope="col">Actions</th>
-                </tr>
-            </thead>
-            <tbody class="table-group-divider">
-                @foreach (var tarea in Model.Tasks)
-                {
-                    <tr>
-                        <td>@tarea.Title</td>
-                        <td>@tarea.Description</td>
-                        <td>@tarea.Status</td>
-                        <td>@tarea.Priority</td>
-                        <td>@tarea.EndDate</td>
-                        <td>
-                            <a class="btn btn-sm btn-primary" asp-action="Edit" asp-route-id="@tarea.Id">Editar</a>
-                            <a class="btn btn-sm btn-danger" asp-action="Delete" asp-route-id="@tarea.Id">Eliminar</a>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
 </div>
 
-<div class="modal fade" id="create" tabindex="-1" aria-labelledby="createLabel" aria-hidden="true">
+<div class="modal fade" id="create" tabindex="-1" aria-labelledby="create-label" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <form asp-action="Create">
+            <form id="form-create-task" asp-action="Create">
                 <div class="modal-header">
-                    <h1 class="modal-title fs-5" id="createLabel"><i class="bi bi-file-earmark-plus"></i> New task</h1>
+                    <h1 class="modal-title fs-5" id="create-label"><i class="bi bi-file-earmark-plus"></i> New task</h1>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                    <div class="form-group">
+                    <div class="form-group mb-3">
                         <label asp-for="NewTask.Title" class="control-label"></label>
-                        <input asp-for="NewTask.Title" class="form-control" />
-                        <span asp-validation-for="NewTask.Title" class="text-danger"></span>
+                        <input asp-for="NewTask.Title" id="new-task-title" class="form-control" placeholder="Give your task a title..." maxlength="100" />
+                        <span asp-validation-for="NewTask.Title" class="text-danger" name="Title"></span>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group mb-3">
                         <label asp-for="NewTask.Description" class="control-label"></label>
-                        <input asp-for="NewTask.Description" class="form-control" />
-                        <span asp-validation-for="NewTask.Description" class="text-danger"></span>
+                        <input asp-for="NewTask.Description" id="new-task-description" class="form-control" placeholder="What needs to be done? Add a description..." maxlength="500" />
+                        <span asp-validation-for="NewTask.Description" class="text-danger" name="Description"></span>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group mb-3">
                         <label asp-for="NewTask.StartDate" class="control-label"></label>
-                        <input asp-for="NewTask.StartDate" class="form-control" />
-                        <span asp-validation-for="NewTask.StartDate" class="text-danger"></span>
+                        <input asp-for="NewTask.StartDate" id="new-task-start-date" type="date" class="form-control" />
+                        <span asp-validation-for="NewTask.StartDate" class="text-danger" name="StartDate"></span>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group mb-3">
                         <label asp-for="NewTask.EndDate" class="control-label"></label>
-                        <input asp-for="NewTask.EndDate" class="form-control" />
-                        <span asp-validation-for="NewTask.EndDate" class="text-danger"></span>
+                        <input asp-for="NewTask.EndDate" id="new-task-end-date" type="date" class="form-control" />
+                        <span asp-validation-for="NewTask.EndDate" class="text-danger" name="EndDate"></span>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group mb-3">
                         <label asp-for="NewTask.Status" class="control-label"></label>
-                        <input asp-for="NewTask.Status" class="form-control" />
-                        <span asp-validation-for="NewTask.Status" class="text-danger"></span>
+                        <select asp-for="NewTask.Status" id="new-task-status"  class="form-control" asp-items="ViewBag.TaskStatusList"></select>
+                        <span asp-validation-for="NewTask.Status" class="text-danger" name="Status"></span>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group mb-3">
                         <label asp-for="NewTask.Priority" class="control-label"></label>
-                        <input asp-for="NewTask.Priority" class="form-control" />
-                        <span asp-validation-for="NewTask.Priority" class="text-danger"></span>
+                        <select asp-for="NewTask.Priority" id="new-task-priority" class="form-control" asp-items="ViewBag.TaskPrioritiesList"></select>
+                        <span asp-validation-for="NewTask.Priority" class="text-danger" name="Priority"></span>
                     </div>
-
-                    @section Scripts {
-                        @{
-                            await Html.RenderPartialAsync("_ValidationScriptsPartial");
-                        }
-                    }
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-primary" value="Create">Add task</button>
+                    <button id="button-create-task" type="button" class="btn btn-warning" value="Create">Save</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="edit" tabindex="-1" aria-labelledby="edit-label" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <form id="form-edit-task">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="edit-label"><i class="bi bi-file-earmark-plus"></i> Edit task</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group mb-3">
+                        <label asp-for="NewTask.Title" class="control-label"></label>
+                        <input asp-for="NewTask.Title" id="selected-task-title" class="form-control" placeholder="Give your task a title..." maxlength="100" />
+                        <span asp-validation-for="NewTask.Title" class="text-danger" name="Title"></span>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label asp-for="NewTask.Description" class="control-label"></label>
+                        <input asp-for="NewTask.Description" id="selected-task-description" class="form-control" placeholder="What needs to be done? Add a description..." maxlength="500" />
+                        <span asp-validation-for="NewTask.Description" class="text-danger" name="Description"></span>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label asp-for="NewTask.StartDate" class="control-label"></label>
+                        <input asp-for="NewTask.StartDate" id="selected-task-start-date" type="date" class="form-control" />
+                        <span asp-validation-for="NewTask.StartDate" class="text-danger" name="StartDate"></span>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label asp-for="NewTask.EndDate" class="control-label"></label>
+                        <input asp-for="NewTask.EndDate" id="selected-task-end-date" type="date" class="form-control" />
+                        <span asp-validation-for="NewTask.EndDate" class="text-danger" name="EndDate"></span>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label asp-for="NewTask.Status" class="control-label"></label>
+                        <select asp-for="NewTask.Status" id="selected-task-status" class="form-control" asp-items="ViewBag.TaskStatusList"></select>
+                        <span asp-validation-for="NewTask.Status" class="text-danger" name="Status"></span>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label asp-for="NewTask.Priority" class="control-label"></label>
+                        <select asp-for="NewTask.Priority" id="selected-task-priority" class="form-control" asp-items="ViewBag.TaskPrioritiesList"></select>
+                        <span asp-validation-for="NewTask.Priority" class="text-danger" name="Priority"></span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Cancel</button>
+                    <button id="button-create-task" type="button" class="btn btn-warning" value="Create" onclick="UpdateTask()">Update</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @await Html.PartialAsync("_ValidationScriptsPartial")
+}
+
+<script>
+    var selectedTaskId = 0;
+    document.addEventListener("DOMContentLoaded", function () {
+        const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+        const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+
+        const buttonCreateTask = document.getElementById("button-create-task");
+        const formCreateTask = document.getElementById("form-create-task");
+
+        buttonCreateTask.addEventListener("click", function (event) {
+        event.preventDefault();
+        const formData = new FormData(formCreateTask);
+        const params = new URLSearchParams(formData);
+
+        fetch(formCreateTask.action, {
+            method: "POST",
+            body: params,
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+            },
+        })
+        .then((response) => {
+            return response.json();
+        })
+        .then((data) => {
+            if (!data.success) {
+                throw data;
+            }
+            else{
+                location.reload();
+            }
+        })
+        .catch((error) => {
+            if (error.errors) {
+                document.querySelectorAll(".text-danger").forEach(e => e.textContent = "");
+                const fields = formCreateTask.querySelectorAll("[data-valmsg-for]");
+                fields.forEach(field => {
+                    var fieldName = field.attributes.name.value;
+                    const errorMessages = error.errors.filter(err => err.toLowerCase().includes(fieldName.toLowerCase()));
+                    if(errorMessages){
+                        field.textContent = errorMessages.join(", ");
+                    }
+                });
+            } else {
+                alert("Error creating the task: " + error.message);
+            }
+        });
+        });
+    });
+
+     function CleanForm(){
+          document.querySelectorAll(".text-danger").forEach(e => e.textContent = "");
+
+          document.getElementById("new-task-title").value = "";
+          document.getElementById("new-task-description").value = "";
+          document.getElementById("new-task-start-date").value = new Date().toISOString().split("T")[0];
+          document.getElementById("new-task-end-date").value = new Date().toISOString().split("T")[0];
+          document.getElementById("new-task-status").value = "Pending";
+          document.getElementById("new-task-priority").value = "Low";
+     }
+
+     function CompleteTask(id) {
+     fetch(`/Tasks/CompleteTask?Id=${id}`,{
+             method: "POST",
+             headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+             }
+        })
+        .then((response) => {
+            return response.json();
+        })
+        .then((data) => {
+            if (!data.success) {
+                console.error(data.message || "Task completion failed.");
+            } else {
+                location.reload();
+            }
+        })
+        .catch((error) => {
+            console.error("Error:", error);
+        });
+    }
+
+     function DeleteTask(id) {
+     fetch(`/Tasks/DeleteTask?Id=${id}`,{
+             method: "POST",
+             headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+             }
+        })
+        .then((response) => {
+            return response.json();
+        })
+        .then((data) => {
+            if (!data.success) {
+                console.error(data.message || "Task deletion failed.");
+            } else {
+                location.reload();
+            }
+        })
+        .catch((error) => {
+            console.error("Error:", error);
+        });
+    }
+
+     function SelectTask(id) {
+        fetch(`/Tasks/SelectTask?Id=${id}`,{
+             method: "POST",
+             headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+             }
+        })
+        .then((response) => {
+            return response.json();
+        })
+        .then((data) => {
+            if (data.success) {
+                const task = data.taskSelected;
+                selectedTaskId = task.id;
+                document.getElementById("selected-task-title").value = task.title;
+                document.getElementById("selected-task-description").value = task.description;
+                document.getElementById("selected-task-start-date").value = task.startDate.split("T")[0];
+                document.getElementById("selected-task-end-date").value = task.endDate.split("T")[0];
+                document.getElementById("selected-task-status").value = task.status == 0 ? "Pending" : task.status == 1 ? "InProgress" : "Completed";
+                document.getElementById("selected-task-priority").value = task.priority == 0 ? "Low" : task.status == 1 ? "Medium" : "High";
+            }  
+        })
+        .catch((error) => {
+            console.error("Error:", error);
+        });
+     }
+
+     function UpdateTask(){
+         const title = document.getElementById("selected-task-title").value;
+         const description = document.getElementById("selected-task-description").value;
+         const startDate = document.getElementById("selected-task-start-date").value;
+         const endDate = document.getElementById("selected-task-end-date").value;
+         const status = document.getElementById("selected-task-status").value;
+         const priority = document.getElementById("selected-task-priority").value;
+         
+         const data = new URLSearchParams({
+             "Id": selectedTaskId,
+             "Title": title,
+             "Description": description,
+             "StartDate": startDate,
+             "EndDate": endDate,
+             "Status": status == "Pending" ? 0 : status == "InProgress" ? 1 : 2,
+             "Priority": priority == "Low" ? 0 : priority == "Medium" ? 1 : 2
+         });
+         
+         fetch(`/Tasks/UpdateTask`, {
+             method: "POST",
+             headers: {
+                 "Content-Type": "application/x-www-form-urlencoded",
+             },
+             body: data.toString()
+         })
+        .then((response) => {
+            return response.json();
+        })
+        .then((data) => {
+            if (!data.success) {
+                console.error(data.message || "Task update failed.");
+            } else {
+                location.reload();
+            }
+        })
+        .catch((error) => {
+            console.error("Error:", error);
+        });
+     }
+</script>

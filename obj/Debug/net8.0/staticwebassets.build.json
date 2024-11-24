@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "PTyvknAw2GlxauPR/eFuyRqTYn+N1Nbsbiciw5JHBMs=",
+  "Hash": "k7jI9DYUJ5hXaN49RtE8cnV8ym0t9V3wnDXGApGYA0w=",
   "Source": "TaskManager",
   "BasePath": "_content/TaskManager",
   "Mode": "Default",
@@ -73,8 +73,8 @@
       "RelatedAsset": "",
       "AssetTraitName": "",
       "AssetTraitValue": "",
-      "Fingerprint": "unod8e1tqr",
-      "Integrity": "5vHx5S3t5SvAuIIRImRCAQ8EWBnH6NqM5UDbquW8TtA=",
+      "Fingerprint": "4v52fa5mqi",
+      "Integrity": "MDETMmE7xvR3HUQqkZdpWTRY0LfPnrBWG32vtk+YgYQ=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\css\\site.css"
@@ -115,8 +115,8 @@
       "RelatedAsset": "",
       "AssetTraitName": "",
       "AssetTraitValue": "",
-      "Fingerprint": "mfy62zpgjf",
-      "Integrity": "Ls7ni5SwoNn8op2rkmyCWFHi9THeLVw/F/bWsIRmp4k=",
+      "Fingerprint": "7xcgyjhiqg",
+      "Integrity": "lTwIkBOswYm37u10PKO4nQtgxyGTDV/aAunrlEIHG1I=",
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\js\\site.js"
@@ -4177,6 +4177,51 @@
   ],
   "Endpoints": [
     {
+      "Route": "css/site.4v52fa5mqi.css",
+      "AssetFile": "E:\\Proyectos\\VisualStudio\\task-manager\\wwwroot\\css\\site.css",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "2809"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/css"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"MDETMmE7xvR3HUQqkZdpWTRY0LfPnrBWG32vtk+YgYQ=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Sun, 24 Nov 2024 18:43:27 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "4v52fa5mqi"
+        },
+        {
+          "Name": "label",
+          "Value": "css/site.css"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-MDETMmE7xvR3HUQqkZdpWTRY0LfPnrBWG32vtk+YgYQ="
+        }
+      ]
+    },
+    {
       "Route": "css/site.css",
       "AssetFile": "E:\\Proyectos\\VisualStudio\\task-manager\\wwwroot\\css\\site.css",
       "Selectors": [],
@@ -4187,7 +4232,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "465"
+          "Value": "2809"
         },
         {
           "Name": "Content-Type",
@@ -4195,11 +4240,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"5vHx5S3t5SvAuIIRImRCAQ8EWBnH6NqM5UDbquW8TtA=\""
+          "Value": "\"MDETMmE7xvR3HUQqkZdpWTRY0LfPnrBWG32vtk+YgYQ=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Thu, 21 Nov 2024 06:38:54 GMT"
+          "Value": "Sun, 24 Nov 2024 18:43:27 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -4209,52 +4254,7 @@
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-5vHx5S3t5SvAuIIRImRCAQ8EWBnH6NqM5UDbquW8TtA="
-        }
-      ]
-    },
-    {
-      "Route": "css/site.unod8e1tqr.css",
-      "AssetFile": "E:\\Proyectos\\VisualStudio\\task-manager\\wwwroot\\css\\site.css",
-      "Selectors": [],
-      "ResponseHeaders": [
-        {
-          "Name": "Accept-Ranges",
-          "Value": "bytes"
-        },
-        {
-          "Name": "Content-Length",
-          "Value": "465"
-        },
-        {
-          "Name": "Content-Type",
-          "Value": "text/css"
-        },
-        {
-          "Name": "ETag",
-          "Value": "\"5vHx5S3t5SvAuIIRImRCAQ8EWBnH6NqM5UDbquW8TtA=\""
-        },
-        {
-          "Name": "Last-Modified",
-          "Value": "Thu, 21 Nov 2024 06:38:54 GMT"
-        },
-        {
-          "Name": "Cache-Control",
-          "Value": "max-age=31536000, immutable"
-        }
-      ],
-      "EndpointProperties": [
-        {
-          "Name": "fingerprint",
-          "Value": "unod8e1tqr"
-        },
-        {
-          "Name": "label",
-          "Value": "css/site.css"
-        },
-        {
-          "Name": "integrity",
-          "Value": "sha256-5vHx5S3t5SvAuIIRImRCAQ8EWBnH6NqM5UDbquW8TtA="
+          "Value": "sha256-MDETMmE7xvR3HUQqkZdpWTRY0LfPnrBWG32vtk+YgYQ="
         }
       ]
     },
@@ -4341,6 +4341,51 @@
       ]
     },
     {
+      "Route": "js/site.7xcgyjhiqg.js",
+      "AssetFile": "E:\\Proyectos\\VisualStudio\\task-manager\\wwwroot\\js\\site.js",
+      "Selectors": [],
+      "ResponseHeaders": [
+        {
+          "Name": "Accept-Ranges",
+          "Value": "bytes"
+        },
+        {
+          "Name": "Content-Length",
+          "Value": "295"
+        },
+        {
+          "Name": "Content-Type",
+          "Value": "text/javascript"
+        },
+        {
+          "Name": "ETag",
+          "Value": "\"lTwIkBOswYm37u10PKO4nQtgxyGTDV/aAunrlEIHG1I=\""
+        },
+        {
+          "Name": "Last-Modified",
+          "Value": "Thu, 21 Nov 2024 06:44:23 GMT"
+        },
+        {
+          "Name": "Cache-Control",
+          "Value": "max-age=31536000, immutable"
+        }
+      ],
+      "EndpointProperties": [
+        {
+          "Name": "fingerprint",
+          "Value": "7xcgyjhiqg"
+        },
+        {
+          "Name": "label",
+          "Value": "js/site.js"
+        },
+        {
+          "Name": "integrity",
+          "Value": "sha256-lTwIkBOswYm37u10PKO4nQtgxyGTDV/aAunrlEIHG1I="
+        }
+      ]
+    },
+    {
       "Route": "js/site.js",
       "AssetFile": "E:\\Proyectos\\VisualStudio\\task-manager\\wwwroot\\js\\site.js",
       "Selectors": [],
@@ -4351,7 +4396,7 @@
         },
         {
           "Name": "Content-Length",
-          "Value": "275"
+          "Value": "295"
         },
         {
           "Name": "Content-Type",
@@ -4359,11 +4404,11 @@
         },
         {
           "Name": "ETag",
-          "Value": "\"Ls7ni5SwoNn8op2rkmyCWFHi9THeLVw/F/bWsIRmp4k=\""
+          "Value": "\"lTwIkBOswYm37u10PKO4nQtgxyGTDV/aAunrlEIHG1I=\""
         },
         {
           "Name": "Last-Modified",
-          "Value": "Thu, 21 Nov 2024 06:34:23 GMT"
+          "Value": "Thu, 21 Nov 2024 06:44:23 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -4373,52 +4418,7 @@
       "EndpointProperties": [
         {
           "Name": "integrity",
-          "Value": "sha256-Ls7ni5SwoNn8op2rkmyCWFHi9THeLVw/F/bWsIRmp4k="
-        }
-      ]
-    },
-    {
-      "Route": "js/site.mfy62zpgjf.js",
-      "AssetFile": "E:\\Proyectos\\VisualStudio\\task-manager\\wwwroot\\js\\site.js",
-      "Selectors": [],
-      "ResponseHeaders": [
-        {
-          "Name": "Accept-Ranges",
-          "Value": "bytes"
-        },
-        {
-          "Name": "Content-Length",
-          "Value": "275"
-        },
-        {
-          "Name": "Content-Type",
-          "Value": "text/javascript"
-        },
-        {
-          "Name": "ETag",
-          "Value": "\"Ls7ni5SwoNn8op2rkmyCWFHi9THeLVw/F/bWsIRmp4k=\""
-        },
-        {
-          "Name": "Last-Modified",
-          "Value": "Thu, 21 Nov 2024 06:34:23 GMT"
-        },
-        {
-          "Name": "Cache-Control",
-          "Value": "max-age=31536000, immutable"
-        }
-      ],
-      "EndpointProperties": [
-        {
-          "Name": "fingerprint",
-          "Value": "mfy62zpgjf"
-        },
-        {
-          "Name": "label",
-          "Value": "js/site.js"
-        },
-        {
-          "Name": "integrity",
-          "Value": "sha256-Ls7ni5SwoNn8op2rkmyCWFHi9THeLVw/F/bWsIRmp4k="
+          "Value": "sha256-lTwIkBOswYm37u10PKO4nQtgxyGTDV/aAunrlEIHG1I="
         }
       ]
     },
@@ -20271,7 +20271,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Thu, 21 Nov 2024 04:43:08 GMT"
+          "Value": "Sun, 24 Nov 2024 20:49:23 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -20316,7 +20316,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Thu, 21 Nov 2024 04:43:08 GMT"
+          "Value": "Sun, 24 Nov 2024 20:49:23 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -20361,7 +20361,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Thu, 21 Nov 2024 04:43:08 GMT"
+          "Value": "Sun, 24 Nov 2024 20:49:23 GMT"
         },
         {
           "Name": "Cache-Control",
@@ -20398,7 +20398,7 @@
         },
         {
           "Name": "Last-Modified",
-          "Value": "Thu, 21 Nov 2024 04:43:08 GMT"
+          "Value": "Sun, 24 Nov 2024 20:49:23 GMT"
         },
         {
           "Name": "Cache-Control",

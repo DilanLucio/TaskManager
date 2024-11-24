@@ -1,7 +1,10 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using TaskManager.Data;
+using TaskManager.Data.Enums;
 using TaskManager.Models;
+using TaskStatus = TaskManager.Data.Enums.TaskStatus;
 
 namespace TaskManager.Controllers
 {
@@ -11,131 +14,131 @@ namespace TaskManager.Controllers
 
         public async Task<IActionResult> Index()
         {
+            ViewBag.TaskStatusList = Enum.GetValues(typeof(TaskStatus))
+                               .Cast<TaskStatus>()
+                               .Select(s => new SelectListItem
+                               {
+                                   Value = s.ToString(),
+                                   Text = s.ToString()
+                               })
+                               .ToList();
+
+            ViewBag.TaskPrioritiesList = Enum.GetValues(typeof(TaskPriorities))
+                               .Cast<TaskPriorities>()
+                               .Select(s => new SelectListItem
+                               {
+                                   Value = s.ToString(),
+                                   Text = s.ToString()
+                               })
+                               .ToList();
+
             TasksViewModel model = new()
             {
                 Tasks = await DBContext.Tasks.ToListAsync(),
-                TaskSelected = new(),
-                NewTask = new()
+                TasksCompleted = await DBContext.Tasks.Where(t => t.Status == (int)TaskStatus.Completed).ToListAsync(),
+                NewTask = new() { StartDate = DateTime.Now, EndDate = DateTime.Now }
             };
             return View(model);
         }
 
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var tarea = await DBContext.Tasks
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (tarea == null)
-            {
-                return NotFound();
-            }
-
-            return View(tarea);
-        }
-
-        public IActionResult Create()
-        {
-            return View();
-        }
-
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Titulo,Descripcion,FechaCreacion,FechaVencimiento,Estado,Prioridad")] Data.Entities.Task tarea)
+        public async Task<JsonResult> Create(NewTaskModel newTask)
         {
             if (ModelState.IsValid)
             {
-                DBContext.Add(tarea);
+                Data.Entities.Task task = new()
+                {
+                    Title = newTask.Title,
+                    Description = newTask.Description,
+                    StartDate = newTask.StartDate,
+                    EndDate = newTask.EndDate,
+                    Status = (int)newTask.Status,
+                    Priority = (int)newTask.Priority
+                };
+                DBContext.Add(task);
                 await DBContext.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return Json(new { success = true, message = "Tarea creada correctamente" });
             }
-            return View(tarea);
-        }
-
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null)
+            else
             {
-                return NotFound();
-            }
+                List<string> errors = ModelState.Values
+                .SelectMany(v => v.Errors)
+                .Select(e => e.ErrorMessage)
+                .ToList();
 
-            var tarea = await DBContext.Tasks.FindAsync(id);
-            if (tarea == null)
-            {
-                return NotFound();
+                return Json(new { success = false, message = "Datos inválidos", errors });
             }
-            return View(tarea);
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Titulo,Descripcion,FechaCreacion,FechaVencimiento,Estado,Prioridad")] Data.Entities.Task tarea)
+        public async Task<JsonResult> SelectTask(int Id)
         {
-            if (id != tarea.Id)
+            Data.Entities.Task task = await DBContext.Tasks.Where(t => t.Id == Id).FirstOrDefaultAsync();
+            if (task != null)
             {
-                return NotFound();
+                return Json(new { success = true, taskSelected = task });
             }
-
-            if (ModelState.IsValid)
+            else
             {
-                try
-                {
-                    DBContext.Update(tarea);
-                    await DBContext.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!TareaExists(tarea.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                return Json(new { success = false, message = "Task not found", errors = "" });
             }
-            return View(tarea);
         }
 
-        public async Task<IActionResult> Delete(int? id)
+        [HttpPost]
+        public async Task<JsonResult> UpdateTask(Data.Entities.Task task)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            var existingTask = await DBContext.Tasks
+                                      .Where(t => t.Id == task.Id)
+                                      .FirstOrDefaultAsync();
 
-            var tarea = await DBContext.Tasks
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (tarea == null)
+            if (existingTask != null)
             {
-                return NotFound();
-            }
+                existingTask.Title = task.Title;
+                existingTask.Description = task.Description;
+                existingTask.StartDate = task.StartDate;
+                existingTask.EndDate = task.EndDate;
+                existingTask.Status = task.Status;
+                existingTask.Priority = task.Priority;
 
-            return View(tarea);
+                await DBContext.SaveChangesAsync();
+                return Json(new { success = true, message = "Task updated" });
+            }
+            else
+            {
+                return Json(new { success = false, message = "Task not found", errors = "" });
+            }
         }
 
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        [HttpPost]
+        public async Task<JsonResult> CompleteTask(int Id)
         {
-            var tarea = await DBContext.Tasks.FindAsync(id);
-            if (tarea != null)
+            Data.Entities.Task task = await DBContext.Tasks.Where(t => t.Id == Id).FirstOrDefaultAsync();
+            if (task != null)
             {
-                DBContext.Tasks.Remove(tarea);
+                task.Status = (int)TaskStatus.Completed;
+                await DBContext.SaveChangesAsync();
+                return Json(new { success = true, message = "Task completed" });
             }
-
-            await DBContext.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+            else
+            {
+                return Json(new { success = false, message = "Task not found", errors = "" });
+            }
         }
 
-        private bool TareaExists(int id)
+        [HttpPost]
+        public async Task<JsonResult> DeleteTask(int Id)
         {
-            return DBContext.Tasks.Any(e => e.Id == id);
+            Data.Entities.Task task = await DBContext.Tasks.Where(t => t.Id == Id).FirstOrDefaultAsync();
+            if (task != null)
+            {
+                DBContext.Remove(task);
+                await DBContext.SaveChangesAsync();
+                return Json(new { success = true, message = "Task deleted" });
+            }
+            else
+            {
+                return Json(new { success = false, message = "Task not found", errors = "" });
+            }
         }
     }
 }
